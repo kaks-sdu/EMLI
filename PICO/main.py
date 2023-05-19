@@ -5,6 +5,8 @@ import uselect
 from machine import Pin, ADC, UART
 from sys import stdin
 
+PICO_ID = 1
+
 pump_control = Pin(16, Pin.OUT)
 pump_water_alarm = Pin(13, Pin.IN)
 plant_water_alarm = Pin(9, Pin.IN)
@@ -39,4 +41,4 @@ while True:
         pump_control.low()
     else:
         utime.sleep(1)
-    print("%d,%d,%.0f,%.0f" % (plant_water_alarm.value(), pump_water_alarm.value(), moisture(), light()))
+    print("%d,%d,%d,%.0f,%.0f" % (PICO_ID, plant_water_alarm.value(), pump_water_alarm.value(), moisture(), light()))

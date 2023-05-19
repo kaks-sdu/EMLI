@@ -13,15 +13,16 @@ stty -F $port $baudrate raw -echo   # the raw -echo options may help with some d
 # Initialize the timer
 timer_start=$(date +%s)
 
-while IFS=',' read -r plant_water_alarm pump_water_alarm moisture light
+while IFS=',' read -r pico_id plant_water_alarm pump_water_alarm moisture light
 do
   # Remove carriage return characters
+  pico_id=${pico_id//$'\r'/}
   plant_water_alarm=${plant_water_alarm//$'\r'/}
   pump_water_alarm=${pump_water_alarm//$'\r'/}
   moisture=${moisture//$'\r'/}
   light=${light//$'\r'/}
 
-  echo "Received data: $plant_water_alarm,$pump_water_alarm,$moisture,$light"  # Print raw input data
+  echo "Received data: $pico_id,$plant_water_alarm,$pump_water_alarm,$moisture,$light"  # Print raw input data
   current_time=$(date +%s)
   time_elapsed=$((current_time - timer_start))
 
