@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Configure the serial port
-port="/dev/ttyACM0"  # Replace with the actual serial port device
-baudrate=115200  # Replace with the baud rate of your serial communication
+# Get the port from command-line arguments
+port="$1"
+baudrate=115200
 
 # Use stty to configure the serial port
 stty -F $port $baudrate raw -echo   # the raw -echo options may help with some devices

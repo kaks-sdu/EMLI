@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Configure the serial port
-port="/dev/ttyACM0"  # Replace with the actual serial port device
-baudrate=115200  # Replace with the baud rate of your serial communication
-threshold=50  # Replace with the moisture threshold value
-pump_duration=1  # Duration of pump operation in seconds
+port="$1"
+baudrate=115200
+threshold=50
+pump_duration=1
 alarm=0  # Indicator for alarm status
 
 # Use stty to configure the serial port
