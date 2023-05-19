@@ -7,6 +7,14 @@ baudrate=115200
 # Use stty to configure the serial port
 stty -F $port $baudrate raw -echo   # the raw -echo options may help with some devices
 
+broker="broker.hivemq.com"
+qos=1
+root="/kaks/"
+topic_plant_water_alarm="plant_water_alarm"
+topic_pump_water_alarm="pump_water_alarm"
+topic_moisture="moisture"
+topic_light="light"
+
 while IFS=',' read -r pico_id plant_water_alarm pump_water_alarm moisture light
 do
   # Remove carriage return characters
@@ -16,5 +24,8 @@ do
   moisture=${moisture//$'\r'/}
   light=${light//$'\r'/}
 
-  echo "Received data: $pico_id,$plant_water_alarm,$pump_water_alarm,$moisture,$light"  # Print raw input data
+  mosquitto_pub -t "${root}$topic_plant_water_alarm" -m "${pico_id},${plant_water_alarm}" -h $broker -q $qos
+  mosquitto_pub -t "${root}$topic_pump_water_alarm" -m "${pico_id},${pump_water_alarm}" -h $broker -q $qos
+  mosquitto_pub -t "${root}$topic_moisture" -m "${pico_id},${moisture}" -h $broker -q $qos
+  mosquitto_pub -t "${root}$topic_light" -m "${pico_id},${light}" -h $broker -q $qos
 done
