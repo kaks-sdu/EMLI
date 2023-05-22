@@ -1,5 +1,6 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, send_from_directory
 import csv
+import os
 
 app = Flask(__name__)
 
@@ -34,6 +35,12 @@ def read_sensor_values():
 def index():
 	timestamps, pico_id_values, plant_water_alarm_values, pump_water_alarm_values, moisture_values, light_values = read_sensor_values()
 	return render_template('graph.html', plant_water_alarm=plant_water_alarm_values[-1], pump_water_alarm=pump_water_alarm_values[-1])
+
+@app.route('/download')
+def download():
+	filename = 'sensor_values.csv'
+	directory = os.getcwd()
+	return send_from_directory(directory, filename, as_attachment=True)
 
 @app.route('/update')
 def update():

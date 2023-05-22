@@ -18,6 +18,9 @@
 
 <body>
     <h1>Sensor Data Graph</h1>
+    <form method="get" action="download">
+        <button type="submit">Download CSV Data</button>
+    </form>
     <h2>Plant Water Alarm: <span id="plantWaterAlarm"></span></h2>
     <h2>Pump Water Alarm: <span id="pumpWaterAlarm"></span></h2>
 
@@ -95,6 +98,7 @@
 
             var table = $('#tableDetails').DataTable();
 
+            updateGraph();
             setInterval(updateGraph, 10000); // Update the graph every 10 seconds
 
             AMOUNT_OF_READINGS = 100;
