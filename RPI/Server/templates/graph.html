@@ -26,13 +26,13 @@
 
                         // Update plant water alarm
                         var plantWaterAlarm = data.plant_water_alarms[data.plant_water_alarms.length - 1];
-                        $('#plantWaterAlarm').text(plantWaterAlarm ? 'Yes' : 'No');
+                        $('#plantWaterAlarm').text(plantWaterAlarm === 1 ? 'Yes' : 'No');
 
                         // Update pump water alarm
                         var pumpWaterAlarm = data.pump_water_alarms[data.pump_water_alarms.length - 1];
-                        $('#pumpWaterAlarm').text(pumpWaterAlarm ? 'Yes' : 'No');
+			$('#pumpWaterAlarm').text(pumpWaterAlarm === 1 ? 'Yes' : 'No');
 
-                        // Update moisture chart
+                    	// Update moisture chart
                         var moistureChart = new Chart(document.getElementById("moistureChart"), {
                             type: 'line',
                             data: {
