@@ -3,6 +3,7 @@
 <head>
     <title>Sensor Data Graph</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
@@ -15,6 +16,8 @@
 
     <script>
         $(document).ready(function() {
+            var dateFormat = "YYYY-MM-DD HH:mm:ss";
+
             // Initialize the charts
             var moistureChart = createChart("moistureChart", "Moisture Value", "blue", 0, 100);
             var lightChart = createChart("lightChart", "Light Value", "orange", 0, 1000);
@@ -37,12 +40,18 @@
                         $('#pumpWaterAlarm').text(pumpWaterAlarm ? 'Yes' : 'No');
 
                         // Update moisture chart data
-                        moistureChart.data.labels = data.timestamps;
+                        var moistureLabels = data.timestamps.map(function(timestamp) {
+                            return moment(timestamp, dateFormat);
+                        });
+                        moistureChart.data.labels = moistureLabels;
                         moistureChart.data.datasets[0].data = data.moisture_values;
                         moistureChart.update();
 
                         // Update light chart data
-                        lightChart.data.labels = data.timestamps;
+                        var lightLabels = data.timestamps.map(function(timestamp) {
+                            return moment(timestamp, dateFormat);
+                        });
+                        lightChart.data.labels = lightLabels;
                         lightChart.data.datasets[0].data = data.light_values;
                         lightChart.update();
                     }
@@ -67,7 +76,11 @@
                             x: {
                                 type: 'time',
                                 time: {
-                                    unit: 'second'
+                                    parser: 'moment',
+                                    unit: 'second',
+                                    displayFormats: {
+                                        second: dateFormat
+                                    }
                                 }
                             },
                             y: {
