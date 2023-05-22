@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>Sensor Data Graph</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -16,10 +15,41 @@
 
     <script>
         $(document).ready(function() {
-            var dateFormat = "YYYY-MM-DD HH:mm:ss";
+            // Helper function to create a chart
+            function createChart(chartId, label, borderColor, suggestedMin, suggestedMax) {
+                return new Chart(document.getElementById(chartId), {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: label,
+                            data: [],
+                            borderColor: borderColor,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: {
+                                    unit: 'millisecond'
+                                }
+                            },
+                            y: {
+                                suggestedMin: suggestedMin,
+                                suggestedMax: suggestedMax
+                            }
+                        }
+                    }
+                });
+            }
 
-            // Initialize the charts
+            // Update moisture chart
             var moistureChart = createChart("moistureChart", "Moisture Value", "blue", 0, 100);
+
+            // Update light chart
             var lightChart = createChart("lightChart", "Light Value", "orange", 0, 1000);
 
             setInterval(updateGraph, 5000); // Update the graph every 5 seconds
@@ -40,54 +70,18 @@
                         $('#pumpWaterAlarm').text(pumpWaterAlarm ? 'Yes' : 'No');
 
                         // Update moisture chart data
-                        var moistureLabels = data.timestamps.map(function(timestamp) {
-                            return moment(timestamp, dateFormat);
+                        moistureChart.data.labels = data.timestamps.map(function(timestamp) {
+                            return new Date(timestamp * 1000); // Convert Unix timestamp to milliseconds
                         });
-                        moistureChart.data.labels = moistureLabels;
                         moistureChart.data.datasets[0].data = data.moisture_values;
                         moistureChart.update();
 
                         // Update light chart data
-                        var lightLabels = data.timestamps.map(function(timestamp) {
-                            return moment(timestamp, dateFormat);
+                        lightChart.data.labels = data.timestamps.map(function(timestamp) {
+                            return new Date(timestamp * 1000); // Convert Unix timestamp to milliseconds
                         });
-                        lightChart.data.labels = lightLabels;
                         lightChart.data.datasets[0].data = data.light_values;
                         lightChart.update();
-                    }
-                });
-            }
-
-            function createChart(chartId, label, borderColor, suggestedMin, suggestedMax) {
-                return new Chart(document.getElementById(chartId), {
-                    type: 'line',
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: label,
-                            data: [],
-                            borderColor: borderColor,
-                            fill: false
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            x: {
-                                type: 'time',
-                                time: {
-                                    parser: 'moment',
-                                    unit: 'second',
-                                    displayFormats: {
-                                        second: dateFormat
-                                    }
-                                }
-                            },
-                            y: {
-                                suggestedMin: suggestedMin,
-                                suggestedMax: suggestedMax
-                            }
-                        }
                     }
                 });
             }
