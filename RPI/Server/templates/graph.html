@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Sensor Data Graph</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+
 <body>
     <h1>Sensor Data Graph</h1>
     <h2>Plant Water Alarm: <span id="plantWaterAlarm"></span></h2>
@@ -14,7 +18,7 @@
     <canvas id="lightChart" width="800" height="400"></canvas>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Helper function to create a chart
             function createChart(chartId, label, borderColor, suggestedMin, suggestedMax) {
                 return new Chart(document.getElementById(chartId), {
@@ -58,7 +62,7 @@
                 $.ajax({
                     url: '/update',
                     type: 'GET',
-                    success: function(response) {
+                    success: function (response) {
                         var data = JSON.parse(response);
 
                         // Update plant water alarm
@@ -70,14 +74,14 @@
                         $('#pumpWaterAlarm').text(pumpWaterAlarm ? 'Yes' : 'No');
 
                         // Update moisture chart data
-                        moistureChart.data.labels = data.timestamps.map(function(timestamp) {
+                        moistureChart.data.labels = data.timestamps.map(function (timestamp) {
                             return new Date(timestamp * 1000); // Convert Unix timestamp to milliseconds
                         });
                         moistureChart.data.datasets[0].data = data.moisture_values;
                         moistureChart.update();
 
                         // Update light chart data
-                        lightChart.data.labels = data.timestamps.map(function(timestamp) {
+                        lightChart.data.labels = data.timestamps.map(function (timestamp) {
                             return new Date(timestamp * 1000); // Convert Unix timestamp to milliseconds
                         });
                         lightChart.data.datasets[0].data = data.light_values;
@@ -88,4 +92,5 @@
         });
     </script>
 </body>
+
 </html>
