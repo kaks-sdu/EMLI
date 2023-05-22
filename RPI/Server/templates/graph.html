@@ -15,6 +15,10 @@
 
     <script>
         $(document).ready(function() {
+            // Initialize the charts
+            var moistureChart = createChart("moistureChart", "Moisture Value", "blue", 0, 100);
+            var lightChart = createChart("lightChart", "Light Value", "orange", 0, 1000);
+
             setInterval(updateGraph, 5000); // Update the graph every 5 seconds
 
             function updateGraph() {
@@ -26,69 +30,51 @@
 
                         // Update plant water alarm
                         var plantWaterAlarm = data.plant_water_alarms[data.plant_water_alarms.length - 1];
-                        $('#plantWaterAlarm').text(plantWaterAlarm === 1 ? 'Yes' : 'No');
+                        $('#plantWaterAlarm').text(plantWaterAlarm ? 'Yes' : 'No');
 
                         // Update pump water alarm
                         var pumpWaterAlarm = data.pump_water_alarms[data.pump_water_alarms.length - 1];
-			$('#pumpWaterAlarm').text(pumpWaterAlarm === 1 ? 'Yes' : 'No');
+                        $('#pumpWaterAlarm').text(pumpWaterAlarm ? 'Yes' : 'No');
 
-                    	// Update moisture chart
-                        var moistureChart = new Chart(document.getElementById("moistureChart"), {
-                            type: 'line',
-                            data: {
-                                labels: data.timestamps,
-                                datasets: [{
-                                    label: 'Moisture Value',
-                                    data: data.moisture_values,
-                                    borderColor: 'blue',
-                                    fill: false
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                scales: {
-                                    x: {
-                                        type: 'time',
-                                        time: {
-                                            unit: 'second'
-                                        }
-                                    },
-                                    y: {
-                                        suggestedMin: 0,
-                                        suggestedMax: 100
-                                    }
-                                }
-                            }
-                        });
+                        // Update moisture chart data
+                        moistureChart.data.labels = data.timestamps;
+                        moistureChart.data.datasets[0].data = data.moisture_values;
+                        moistureChart.update();
 
-                        // Update light chart
-                        var lightChart = new Chart(document.getElementById("lightChart"), {
-                            type: 'line',
-                            data: {
-                                labels: data.timestamps,
-                                datasets: [{
-                                    label: 'Light Value',
-                                    data: data.light_values,
-                                    borderColor: 'orange',
-                                    fill: false
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                scales: {
-                                    x: {
-                                        type: 'time',
-                                        time: {
-                                            unit: 'second'
-                                        }
-                                    },
-                                    y: {
-                                        suggestedMin: 0,
-                                        suggestedMax: 1000
-                                    }
+                        // Update light chart data
+                        lightChart.data.labels = data.timestamps;
+                        lightChart.data.datasets[0].data = data.light_values;
+                        lightChart.update();
+                    }
+                });
+            }
+
+            function createChart(chartId, label, borderColor, suggestedMin, suggestedMax) {
+                return new Chart(document.getElementById(chartId), {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: label,
+                            data: [],
+                            borderColor: borderColor,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: {
+                                    unit: 'second'
                                 }
+                            },
+                            y: {
+                                suggestedMin: suggestedMin,
+                                suggestedMax: suggestedMax
                             }
-                        });
+                        }
                     }
                 });
             }
