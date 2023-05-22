@@ -16,7 +16,7 @@ cleanup() {
 for port in "${ports[@]}"; do
   # Start a background process for each port
   # Pass the port as an argument to the scripts and split the output using tee
-  ./read_serial.sh "$port" | tee >(./control_pump.sh "$port") >(./mqtt_publish.sh "$port") >/dev/null &
+  ./read_serial.sh "$port" | tee >(./save_serial.sh) >(./control_pump.sh "$port") >(./mqtt_publish.sh "$port") >/dev/null &
 done
 
 # Wait for all child processes to finish

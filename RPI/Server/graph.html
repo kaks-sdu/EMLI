@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sensor Values Graph</title>
+</head>
+<body>
+	<h1>Plant Water Alarm: {{ plant_water_alarm }}</h1>
+	<h1>Pump Water Alarm: {{ pump_water_alarm }}</h1>
+	<div>
+		<h2>Moisture Sensor Values</h2>
+		<img src="{{ url_for('static', filename='moisture_graph.png') }}" alt="Moisture Sensor Graph"> 
+	</div>
+	<div>
+		<h2>Light Sensor Values</h2>
+		<img src="{{ url_for('static', filename='moisture_graph.png') }}" alt="Light Sensor Graph">
+	</div>
+</body>
+</html>
+
