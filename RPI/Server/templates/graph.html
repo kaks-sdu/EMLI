@@ -39,12 +39,12 @@
                                 type: 'time',
                                 time: {
                                     unit: 'second',
-				    stepSize: 1,
-				    displayFormats: {
-				        milisecond: 'h:mm:ss'
-                               	    }
-				},
-				maxTicksLimit: 50
+                                    stepSize: 1,
+                                    displayFormats: {
+                                        milisecond: 'h:mm:ss'
+                                    }
+                                },
+                                maxTicksLimit: 50
                             },
                             y: {
                                 suggestedMin: suggestedMin,
@@ -63,13 +63,15 @@
 
             setInterval(updateGraph, 5000); // Update the graph every 5 seconds
 
+            AMOUNT_OF_READINGS = 100;
+
             function updateGraph() {
                 $.ajax({
                     url: '/update',
                     type: 'GET',
-                    success: function (response) {			
+                    success: function (response) {
                         var data = response;
-			
+
                         // Update plant water alarm
                         var plantWaterAlarm = data.plant_water_alarm_values[data.plant_water_alarm_values.length - 1];
                         $('#plantWaterAlarm').text(plantWaterAlarm === '1' ? 'Yes' : 'No');
@@ -78,18 +80,19 @@
                         var pumpWaterAlarm = data.pump_water_alarm_values[data.pump_water_alarm_values.length - 1];
                         $('#pumpWaterAlarm').text(pumpWaterAlarm === '1' ? 'Yes' : 'No');
 
-                        // Update moisture chart data
-                        moistureChart.data.labels = data.timestamps.map(function (timestamp) {
+                        // Update chart data (show only the newest 100 readings)
+                        var latestMoisture = data.moisture_values.slice(-AMOUNT_OF_READINGS);
+                        var latestLight = data.light_values.slice(-AMOUNT_OF_READINGS);
+                        var latestTimestamps = data.timestamps.slice(-AMOUNT_OF_READINGS).map(function (timestamp) {
                             return new Date(timestamp * 1000); // Convert Unix timestamp to milliseconds
                         });
-                        moistureChart.data.datasets[0].data = data.moisture_values;
+
+                        moistureChart.data.labels = latestTimestamps;
+                        moistureChart.data.datasets[0].data = latestMoisture;
                         moistureChart.update();
 
-                        // Update light chart data
-                        lightChart.data.labels = data.timestamps.map(function (timestamp) {
-                            return new Date(timestamp * 1000); // Convert Unix timestamp to milliseconds
-                        });
-                        lightChart.data.datasets[0].data = data.light_values;
+                        lightChart.data.labels = latestTimestamps;
+                        lightChart.data.datasets[0].data = latestLight;
                         lightChart.update();
                     }
                 });
