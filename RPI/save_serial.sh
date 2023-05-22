@@ -1,7 +1,7 @@
 #!/bin/bash
 
 output_file="./Server/sensor_values.csv"
-date_format="%Y-%m-%d %H:%M:%S"
+date_format="%s" #"%Y-%m-%d %H:%M:%S"
 
 # Check if file exists
 if [ ! -f "$output_file" ]; then
