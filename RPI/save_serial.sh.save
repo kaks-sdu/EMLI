@@ -1,0 +1,17 @@
+#!/bin/bash
+
+output_file="./Server/output.csv"
+
+# Check if file exists
+if [ ! -f "$output_file" ]; then
+	touch "$output_file"
+fi
+
+timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+
+# Save input
+if [ -p /dev/stdin ]; then
+	sed "s/^/$timestamp,/" >> "$output_file"
+else
+	sed "s/^/$timestamp,/" >> "o$output_file" < -
+fi

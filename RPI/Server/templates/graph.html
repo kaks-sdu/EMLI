@@ -3,16 +3,48 @@
 
 <head>
     <title>Sensor Data Graph</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 </head>
 
 <body>
     <h1>Sensor Data Graph</h1>
     <h2>Plant Water Alarm: <span id="plantWaterAlarm"></span></h2>
     <h2>Pump Water Alarm: <span id="pumpWaterAlarm"></span></h2>
+
+    <table id="tableDetails" class="stripe" style="width:100%">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Timestamp</th>
+                <th>Pico ID</th>
+                <th>Plant Water Alarm</th>
+                <th>Pump Water Alarm</th>
+                <th>Moisture</th>
+                <th>Light</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>Date</th>
+                <th>Timestamp</th>
+                <th>Pico ID</th>
+                <th>Plant Water Alarm</th>
+                <th>Pump Water Alarm</th>
+                <th>Moisture</th>
+                <th>Light</th>
+            </tr>
+        </tfoot>
+    </table>
 
     <canvas id="moistureChart" width="800" height="300"></canvas>
     <canvas id="lightChart" width="800" height="300"></canvas>
@@ -61,7 +93,9 @@
             // Update light chart
             var lightChart = createChart("lightChart", "Light Value", "orange", 0, 100);
 
-            setInterval(updateGraph, 5000); // Update the graph every 5 seconds
+            var table = $('#tableDetails').DataTable();
+
+            setInterval(updateGraph, 10000); // Update the graph every 10 seconds
 
             AMOUNT_OF_READINGS = 100;
 
@@ -72,9 +106,29 @@
                     success: function (response) {
                         var data = response;
 
+                        var updatedData = [];
+
+                        for (var i = 0; i < data.timestamps.length; i++) {
+                            
+                            var date = new Date(parseInt(data.timestamps[i]) * 1000).toLocaleString();
+                            var row = [
+                                date,
+                                data.timestamps[i],
+                                data.pico_id[i],
+                                data.plant_water_alarm_values[i],
+                                data.pump_water_alarm_values[i],
+                                data.moisture_values[i],
+                                data.light_values[i]
+                            ];
+                            updatedData.push(row);
+
                         // Update plant water alarm
                         var plantWaterAlarm = data.plant_water_alarm_values[data.plant_water_alarm_values.length - 1];
                         $('#plantWaterAlarm').text(plantWaterAlarm === '1' ? 'Yes' : 'No');
+                        
+			table.clear();
+                        table.rows.add(updatedData);
+                        table.draw(false);
 
                         // Update pump water alarm
                         var pumpWaterAlarm = data.pump_water_alarm_values[data.pump_water_alarm_values.length - 1];
@@ -95,7 +149,7 @@
                         lightChart.data.datasets[0].data = latestLight;
                         lightChart.update();
                     }
-                });
+                }});
             }
         });
     </script>

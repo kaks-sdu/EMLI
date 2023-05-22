@@ -14,5 +14,5 @@ do
   then
     echo "$data"
   fi
-  sleep 1    # sleep for a second, simulating a timeout
+  sleep 10    # sleep for a second, simulating a timeout
 done

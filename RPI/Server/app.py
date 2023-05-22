@@ -5,6 +5,7 @@ app = Flask(__name__)
 
 def read_sensor_values():
 	timestamps = []
+	pico_id_values = []
 	plant_water_alarm_values = []
 	pump_water_alarm_values = []
 	moisture_values = []
@@ -21,23 +22,25 @@ def read_sensor_values():
 			moisture = row[4]
 			light = row[5]
 			timestamps.append(timestamp)
+			pico_id_values.append(pico_id)
 			plant_water_alarm_values.append(plant_water_alarm)
 			pump_water_alarm_values.append(pump_water_alarm)
 			moisture_values.append(float(moisture))
 			light_values.append(float(light))
 
-	return timestamps, plant_water_alarm_values, pump_water_alarm_values, moisture_values, light_values
+	return timestamps, pico_id_values, plant_water_alarm_values, pump_water_alarm_values, moisture_values, light_values
 
 @app.route('/')
 def index():
-	timestamps, plant_water_alarm_values, pump_water_alarm_values, moisture_values, light_values = read_sensor_values()
+	timestamps, pico_id_values, plant_water_alarm_values, pump_water_alarm_values, moisture_values, light_values = read_sensor_values()
 	return render_template('graph.html', plant_water_alarm=plant_water_alarm_values[-1], pump_water_alarm=pump_water_alarm_values[-1])
 
 @app.route('/update')
 def update():
-	timestamps, plant_water_alarm_values, pump_water_alarm_values, moisture_values, light_values = read_sensor_values()
+	timestamps, pico_id_values, plant_water_alarm_values, pump_water_alarm_values, moisture_values, light_values = read_sensor_values()
 	data = {
 		'timestamps': timestamps,
+		'pico_id': pico_id_values,
 		'moisture_values': moisture_values,
 		'light_values': light_values,
 		'plant_water_alarm_values': plant_water_alarm_values,
