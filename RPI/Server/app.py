@@ -14,8 +14,9 @@ def read_sensor_values():
 
 	with open('sensor_values.csv', 'r') as file:
 		reader = csv.reader(file)
-		next(reader)  # Skip the header row
 		for row in reader:
+			if len(row) != 6:
+				continue
 			timestamp = row[0]
 			pico_id = row[1]
 			plant_water_alarm = row[2]
