@@ -44,6 +44,14 @@ do
     alarm=0
   fi
 
+  if ! kill -0 "$mqtt_subscriber_PID" 2>/dev/null; then
+    echo "Restarting MQTT subscriber"
+    coproc mqtt_subscriber {
+      mosquitto_sub -t "${root}$topic_start_pump" -h $broker -q $qos
+    }
+    subscriber_fd=${mqtt_subscriber[0]}
+  fi
+
   # Check for incoming MQTT messages
   if read -t 1 -u "$subscriber_fd" start_pump_message; then
     echo "Received MQTT message: $start_pump_message"
@@ -55,7 +63,7 @@ do
   fi
 
   # Run the pump every 12 hours
-  if [[ $time_elapsed -ge 43200 ]] && [[ $alarm -eq 0 ]]; then
+  if [[ $time_elapsed -ge 12 ]] && [[ $alarm -eq 0 ]]; then
     echo -n 'p' > $port
     timer_start=$(date +%s)
     echo "run pump every 12h"

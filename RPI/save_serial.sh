@@ -1,6 +1,6 @@
 #!/bin/bash
 
-output_file="./Server/sensor_values.csv"
+output_file="home/pi/EMLI/RPI/Server/sensor_values.csv"
 date_format="%s" #"%Y-%m-%d %H:%M:%S"
 
 # Check if file exists

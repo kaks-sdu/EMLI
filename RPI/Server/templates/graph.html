@@ -99,10 +99,10 @@
             var table = $('#tableDetails').DataTable();
 
             updateGraph();
-            setInterval(updateGraph, 3000); // Update the graph every 10 seconds
+            setInterval(updateGraph, 5000); // Update the graph every 10 seconds
 
             AMOUNT_OF_READINGS = 100;
-
+o
             function updateGraph() {
                 $.ajax({
                     url: '/update',
