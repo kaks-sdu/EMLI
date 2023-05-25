@@ -70,7 +70,7 @@ do
   fi
 
   # Run the pump once every hour if the soil moisture falls below a certain threshold
-  if [[ $(bc <<< "$moisture < $threshold") -eq 1 ]] && [[ $(($time_elapsed % 3600)) -eq 0 ]] && [[ $alarm -eq 0 ]]; then
+  if [[ $(bc <<< "$moisture < $threshold") -eq 1 ]] && [[ $(($time_elapsed % 5)) -eq 0 ]] && [[ $alarm -eq 0 ]]; then
     echo -n 'p' > $port
     echo "moisture below threshold. starting pump"
   fi

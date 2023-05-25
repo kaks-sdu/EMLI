@@ -4,6 +4,19 @@ import os
 
 app = Flask(__name__)
 
+def read_health_log():
+	timestamp = []
+	internet = []
+	temp = []
+	with open('/home/pi/EMLI/RPI/Server/log.csv','r') as file:
+		reader = csv.reader(file)
+		for row in reader:
+			timestamp.append(row[0])
+			internet.append(row[1])
+			temp.append(row[2])
+
+	return timestamp, internet, temp
+
 def read_sensor_values():
 	timestamps = []
 	pico_id_values = []
@@ -42,6 +55,16 @@ def download():
 	filename = 'sensor_values.csv'
 	directory = os.getcwd()
 	return send_from_directory(directory, filename, as_attachment=True)
+
+@app.route('/health')
+def health():
+	timestamps, internet, temp = read_health_log()
+	data = {
+		'timestamps': timestamps,
+		'internet': internet,
+		'temp': temp
+	}
+	return jsonify(data) 
 
 @app.route('/update')
 def update():

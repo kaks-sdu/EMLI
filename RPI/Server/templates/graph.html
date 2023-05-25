@@ -21,6 +21,8 @@
     <form method="get" action="download">
         <button type="submit">Download CSV Data</button>
     </form>
+    <h3>Internet: <span id="internet"></span></h3>
+    <h3>Temperature: <span id="temp"></span></h3>
     <h2>Plant Water Alarm: <span id="plantWaterAlarm"></span></h2>
     <h2>Pump Water Alarm: <span id="pumpWaterAlarm"></span></h2>
 
@@ -90,7 +92,7 @@
                 });
             }
 
-            // Update moisture chart
+// Update moisture chart
             var moistureChart = createChart("moistureChart", "Moisture Value", "blue", 0, 100);
 
             // Update light chart
@@ -100,9 +102,26 @@
 
             updateGraph();
             setInterval(updateGraph, 5000); // Update the graph every 10 seconds
+            updateHealth();
+            setInterval(updateHealth, 30000);
 
-            AMOUNT_OF_READINGS = 100;
-o
+            var AMOUNT_OF_READINGS = 100;
+
+            function updateHealth() {
+                $.ajax({
+                    url: '/health',
+                    type: 'GET',
+                    success: function (response) {
+                        var data = response;
+                        var timestamp = data.timestamps[data.timestamps.length - 1];
+                        var latestTemp = data.temp[data.temp.length - 1];
+                        var latestInternet = data.internet[data.internet.length - 1];
+                        $('#temp').text(timestamp + " | " + latestTemp);
+			$('#internet').text(timestamp + " | " + latestInternet);
+                    }
+                 });
+            }
+
             function updateGraph() {
                 $.ajax({
                     url: '/update',
@@ -154,6 +173,8 @@ o
                         lightChart.update();
                     }
                 }});
+
+
             }
         });
     </script>
