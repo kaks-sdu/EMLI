@@ -102,7 +102,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
     if (String(topic) == TOPIC_PLANT_WATER_ALARM) {
       plant_water_alarm = (value == 1);
     } else if (String(topic) == TOPIC_PUMP_WATER_ALARM) {
-      pump_water_alarm = (value == 0);
+      pump_water_alarm = (value == 1);
     } else if (String(topic) == TOPIC_MOISTURE) {
       moisture_low = (value < moistureThreshold);
     }
