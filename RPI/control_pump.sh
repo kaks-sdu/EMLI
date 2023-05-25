@@ -2,7 +2,7 @@
 
 # Configure the serial port
 port="$1"
-threshold=50
+threshold=30
 pump_duration=1
 alarm=0  # Indicator for alarm status 
 
