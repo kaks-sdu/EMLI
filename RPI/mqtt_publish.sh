@@ -1,12 +1,5 @@
 #!/bin/bash
 
-# Configure the serial port
-port="$1"
-baudrate=115200
-
-# Use stty to configure the serial port
-stty -F $port $baudrate raw -echo   # the raw -echo options may help with some devices
-
 broker="broker.hivemq.com"
 qos=1
 root="/kaks/"
