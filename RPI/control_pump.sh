@@ -63,14 +63,14 @@ do
   fi
 
   # Run the pump every 12 hours
-  if [[ $time_elapsed -ge 12 ]] && [[ $alarm -eq 0 ]]; then
+  if [[ $time_elapsed -ge 43200 ]] && [[ $alarm -eq 0 ]]; then
     echo -n 'p' > $port
     timer_start=$(date +%s)
     echo "run pump every 12h"
   fi
 
   # Run the pump once every hour if the soil moisture falls below a certain threshold
-  if [[ $(bc <<< "$moisture < $threshold") -eq 1 ]] && [[ $(($time_elapsed % 5)) -eq 0 ]] && [[ $alarm -eq 0 ]]; then
+  if [[ $(bc <<< "$moisture < $threshold") -eq 1 ]] && [[ $(($time_elapsed % 3600)) -eq 0 ]] && [[ $alarm -eq 0 ]]; then
     echo -n 'p' > $port
     echo "moisture below threshold. starting pump"
   fi
