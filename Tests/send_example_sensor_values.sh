@@ -1,16 +1,19 @@
 #!/bin/bash
 
-# Output some test data
-for i in {1..10}
-do
-  echo "1,0,0,30,200"
-  sleep 1
-  echo "1,0,0,60,200"
-  sleep 1
-  echo "1,0,0,90,200"
-  sleep 1
-  echo "1,1,0,30,200"
-  sleep 1
-  echo "1,0,1,30,200"
-  sleep 1
-done
+# System is OK
+echo "1,0,0,35,100"
+sleep 5
+# Plant water alarm is running
+echo "1,1,0,40,100"
+sleep 5
+# Pump water alarm is running
+echo "1,0,1,90,100"
+sleep 5
+# Both alarms are running
+echo "1,1,1,35,100"
+sleep 5
+# Moisture is below threshold
+echo "1,0,0,1,100"
+sleep 5
+# System is back to OK
+echo "1,0,0,35,100"
